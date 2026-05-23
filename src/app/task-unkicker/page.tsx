@@ -1,14 +1,8 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-const BREAKDOWN_MAP: Record<string, string[]> = {
-  "reply to": ["Open your email app or inbox", "Find the specific email and read it fully", "Write just one sentence as a reply draft, anything", "Add a second sentence if you can", "Read it back once", "Hit send"],
-  laundry: ["Pick up one item of clothing from the floor", "Find the laundry basket or bag", "Put that one item in it", "Collect any other items nearby while you're up", "Carry the basket to the machine", "Put it in and press start"],
-  email: ["Open the email", "Read it once without doing anything", "Write: Hi [name], thanks for reaching out.", "Add one sentence addressing the main point", "Sign off and reread quickly", "Send it"],
-  report: ["Open a blank document", "Type the title and your name", "Write two bullet points: what the report is about, what the main answer is", "Turn those bullets into two sentences of an intro", "Move to the next section"],
-  dentist: ["Search your city dentist accepting new patients", "Pick the first result that looks reasonable", "Find their phone number or online booking link", "Book or call for the earliest available slot", "Put it in your calendar right now"],
-  clean: ["Pick up one thing and put it away or throw it out", "Do that three more times", "Clear just the surface directly in front of you", "Wipe that surface with anything", "Step back and look at what's left"],
-};
+const GEMINI_API_KEY = "AIzaSyD648DbvTQ827fd7sSXmZ_BrF2k_MlqrbY";
+const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
 const EXAMPLES = [
   "Reply to that email",
@@ -16,21 +10,56 @@ const EXAMPLES = [
   "Write that report",
   "Make a dentist appointment",
   "Clean my desk",
+  "Fix things with my friend",
+  "Apply for that job",
+  "Start exercising",
 ];
 
-function generateSteps(task: string): string[] {
-  const t = task.toLowerCase();
-  for (const [key, steps] of Object.entries(BREAKDOWN_MAP)) {
-    if (t.includes(key)) return steps;
-  }
-  return [
-    `Open whatever you need to start "${task.split(" ").slice(0, 4).join(" ")}"`,
-    "Do the smallest visible first action, one thing",
-    "Stop and note what the next thing after that would be",
-    "Do that next thing",
-    "Check: is this actually still blocked, or is it moving now?",
-    "Keep going in the same small-step way",
-  ];
+// Fallback if API fails
+const FALLBACK_STEPS = [
+  "Open whatever you need to start this task",
+  "Do the single smallest visible first action",
+  "Note what the very next thing would be after that",
+  "Do that next thing",
+  "Check: is this still blocked, or is it moving now?",
+  "Keep going one small step at a time",
+];
+
+async function getStepsFromGemini(task: string): Promise<string[]> {
+  const prompt = `You are helping someone with ADHD who is stuck on a task. They cannot start it due to executive dysfunction and task paralysis.
+
+Their stuck task: "${task}"
+
+Break this into 5-7 extremely small, concrete, physical steps. Each step should take under 2 minutes. The first step must be so small their brain cannot argue with it.
+
+Rules:
+- Be brutally specific and physical (e.g. "open your laptop" not "start working")
+- No motivational language, no "you've got this"
+- No step should require decision-making
+- Write in second person, present tense
+- Each step on its own line, no numbering, no bullets, no extra text
+- Just the steps, nothing else`;
+
+  const res = await fetch(GEMINI_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: { temperature: 0.4, maxOutputTokens: 400 },
+    }),
+  });
+
+  if (!res.ok) throw new Error("API error");
+
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  const steps = text
+    .split("\n")
+    .map((s: string) => s.trim())
+    .filter((s: string) => s.length > 3 && !s.match(/^[\d\-\*\•]/));
+  
+  if (steps.length < 2) throw new Error("Bad response");
+  return steps;
 }
 
 export default function TaskUnkickerPage() {
@@ -38,15 +67,34 @@ export default function TaskUnkickerPage() {
   const [steps, setSteps] = useState<string[]>([]);
   const [done, setDone] = useState<boolean[]>([]);
   const [shown, setShown] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [usingAI, setUsingAI] = useState(true);
   const stepsRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => { document.title = "Task Unkicker - Break ADHD Task Paralysis | ClearDesk"; }, []);
+  useEffect(() => {
+    document.title = "Task Unkicker - Break ADHD Task Paralysis | ClearDesk";
+  }, []);
 
-  const handleUnkick = () => {
+  const handleUnkick = async () => {
     if (task.trim().length < 3) return;
-    const s = generateSteps(task);
-    setSteps(s);
-    setDone(new Array(s.length).fill(false));
+    setLoading(true);
+    setShown(false);
+    setSteps([]);
+
+    let result: string[] = [];
+    let aiWorked = true;
+
+    try {
+      result = await getStepsFromGemini(task);
+    } catch {
+      aiWorked = false;
+      result = FALLBACK_STEPS;
+    }
+
+    setUsingAI(aiWorked);
+    setSteps(result);
+    setDone(new Array(result.length).fill(false));
+    setLoading(false);
     setShown(true);
     setTimeout(() => stepsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 150);
   };
@@ -60,21 +108,29 @@ export default function TaskUnkickerPage() {
     setSteps([]);
     setDone([]);
     setShown(false);
+    setLoading(false);
   };
+
+  const completedCount = done.filter(Boolean).length;
 
   return (
     <>
       <div className="unkicker-page">
         <div className="eyebrow eyebrow-teal">
-          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true"><circle cx="4" cy="4" r="3.5" fill="#2A7F7F" /></svg>
-          Task tool
+          <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
+            <circle cx="4" cy="4" r="3.5" fill="#2A7F7F" />
+          </svg>
+          Task tool · AI powered
         </div>
         <h1 className="unkicker-title">Task unkicker</h1>
         <p className="unkicker-desc">
-          Type the task you keep avoiding. This tool breaks it into steps so small your brain can't come up with a reason to refuse the first one.
+          Type any task you keep avoiding. AI breaks it into steps so small your brain
+          cannot find a reason to refuse the first one.
         </p>
 
-        <p style={{ fontSize: "0.75rem", color: "var(--ink-faint)", marginBottom: "0.75rem" }}>Try an example:</p>
+        <p style={{ fontSize: "0.75rem", color: "var(--ink-faint)", marginBottom: "0.75rem" }}>
+          Try an example:
+        </p>
         <div className="examples-row">
           {EXAMPLES.map((ex) => (
             <button key={ex} className="example-chip" onClick={() => setTask(ex)}>
@@ -84,37 +140,63 @@ export default function TaskUnkickerPage() {
         </div>
 
         <div className="input-card">
-          <label className="input-label" htmlFor="taskInput">What's the stuck task?</label>
-          <span className="input-sublabel">Be as specific or vague as you want. This works either way.</span>
+          <label className="input-label" htmlFor="taskInput">
+            What is the stuck task?
+          </label>
+          <span className="input-sublabel">
+            Be as specific or vague as you want. The more detail, the better the breakdown.
+          </span>
           <textarea
             className="task-input"
             id="taskInput"
             value={task}
             onChange={(e) => setTask(e.target.value)}
-            placeholder="e.g. reply to the email from my landlord that I've been ignoring for 5 days"
+            onKeyDown={(e) => { if (e.key === "Enter" && e.metaKey) handleUnkick(); }}
+            placeholder="e.g. reply to the email from my landlord that I have been ignoring for 5 days"
             rows={3}
             aria-label="Enter your stuck task"
           />
           <div className="input-footer">
             <span className="input-hint">{task.trim().length} characters</span>
-            <button className="btn-unkick" onClick={handleUnkick} disabled={task.trim().length < 3}>
-              Break it down
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-                <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+            <button
+              className="btn-unkick"
+              onClick={handleUnkick}
+              disabled={task.trim().length < 3 || loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner" aria-hidden="true" />
+                  Thinking...
+                </>
+              ) : (
+                <>
+                  Break it down
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M3 7h8M8 4l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </>
+              )}
             </button>
           </div>
         </div>
 
-        <div
-          ref={stepsRef}
-          className={`steps-card${shown ? " show" : ""}`}
-          aria-live="polite"
-        >
-          <p className="steps-heading">
-            Breaking down: &ldquo;{task.length > 40 ? task.slice(0, 40) + "..." : task}&rdquo;
-          </p>
-          <p className="steps-subheading">Tap a step to mark it done</p>
+        <div ref={stepsRef} className={`steps-card${shown ? " show" : ""}`} aria-live="polite">
+          <div className="steps-card-header">
+            <div>
+              <p className="steps-heading">
+                Breaking down: &ldquo;{task.length > 40 ? task.slice(0, 40) + "..." : task}&rdquo;
+              </p>
+              <p className="steps-subheading">
+                {usingAI ? "AI-generated steps" : "General steps (offline mode)"} · tap to mark done
+              </p>
+            </div>
+            {completedCount > 0 && (
+              <div className="steps-progress-badge">
+                {completedCount}/{steps.length}
+              </div>
+            )}
+          </div>
+
           <div>
             {steps.map((step, i) => (
               <div
@@ -134,13 +216,20 @@ export default function TaskUnkickerPage() {
               </div>
             ))}
           </div>
+
           {shown && (
             <div className="first-step-callout">
               Start with step 1 right now, before closing this tab. Just step 1. Everything else can wait.
             </div>
           )}
+
           <div className="steps-footer">
-            <button className="steps-reset" onClick={handleClear}>Start over</button>
+            <button className="steps-reset" onClick={handleUnkick} disabled={loading}>
+              Regenerate steps
+            </button>
+            <button className="steps-reset" onClick={handleClear}>
+              Start over
+            </button>
           </div>
         </div>
       </div>
@@ -148,12 +237,30 @@ export default function TaskUnkickerPage() {
       <article className="article-section">
         <hr className="article-divider" />
         <h2>Why task paralysis happens and what actually helps</h2>
-        <p>Task paralysis isn't laziness. It's a mismatch between how much cognitive load a task looks like it requires and how much activation energy your brain has available right now. When those don't line up, the task just sits there.</p>
-        <p>The problem is usually the starting point, not the task itself. Write the report is too big. There's no traction. Open a blank document is something a tired brain can do. That first tiny action is often enough to get the momentum going.</p>
+        <p>
+          Task paralysis is not laziness. It is a mismatch between how much cognitive load a task
+          looks like it requires and how much activation energy your brain has available right now.
+          When those do not line up, the task just sits there.
+        </p>
+        <p>
+          The problem is usually the starting point, not the task itself. Write the report is too
+          big. There is no traction. Open a blank document is something a tired brain can do. That
+          first tiny action is often enough to get the momentum going.
+        </p>
         <h3>The initiation problem specifically</h3>
-        <p>For people with ADHD, initiation is a specific bottleneck. The executive function system that fires the starting gun on tasks doesn't always respond well to importance or urgency the way it's supposed to. That's why something objectively easy can sit undone for weeks while something that barely matters gets done immediately.</p>
+        <p>
+          For people with ADHD, initiation is a specific bottleneck. The executive function system
+          that fires the starting gun on tasks does not always respond well to importance or urgency
+          the way it is supposed to. That is why something objectively easy can sit undone for weeks
+          while something that barely matters gets done immediately.
+        </p>
         <h3>Why you need to do the first step right now</h3>
-        <p>If you read through the steps and think okay I'll start later, the window often closes. Task breakdown works best if you go directly from reading step one to doing step one. Even if step one takes ninety seconds. The goal is to get a little bit of momentum before your brain talks you out of it.</p>
+        <p>
+          If you read through the steps and think you will start later, the window often closes.
+          Task breakdown works best if you go directly from reading step one to doing step one. Even
+          if step one takes ninety seconds. The goal is to get a little momentum before your brain
+          talks you out of it.
+        </p>
       </article>
     </>
   );

@@ -527,3 +527,35 @@ section { padding: 6rem 2rem; }
   .answer-row { flex-direction: column; align-items: center; }
   .answer-btn { max-width: 100%; width: 100%; }
 }
+
+/* ── SPINNER ── */
+.spinner {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── STEPS CARD HEADER ── */
+.steps-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.steps-progress-badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--sage);
+  background: var(--sage-light);
+  border: 0.5px solid var(--sage-mid);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
