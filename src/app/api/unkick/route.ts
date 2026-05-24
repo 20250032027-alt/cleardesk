@@ -14,6 +14,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Task too short" }, { status: 400 });
     }
 
+    // FIX #1: Tell the AI to stop being conversational
     const prompt = `You are an expert productivity coach helping someone with ADHD. 
 Break down the following task into exactly 6 concrete, physical steps.
 Task: "${task.trim()}"
@@ -21,7 +22,8 @@ Task: "${task.trim()}"
 RULES:
 - You MUST provide exactly 6 steps.
 - The very first step must be a "micro-step" that takes under 30 seconds and requires zero decisions (e.g., "Stand up", "Grab a trash bag").
-- Keep each step short, actionable, and physical.`;
+- Keep each step short, actionable, and physical.
+- RETURN ONLY VALID JSON. Do not include markdown formatting like \`\`\`json. Do not include conversational text like "Here is the JSON requested".`;
 
     const res = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_KEY}`,
@@ -37,7 +39,6 @@ RULES:
             temperature: 0.4, 
             maxOutputTokens: 300,
             responseMimeType: "application/json",
-            // FIX: We now ask for an OBJECT containing our array. Models understand this much better!
             responseSchema: {
               type: "OBJECT",
               properties: {
@@ -68,8 +69,17 @@ RULES:
     let steps: string[] = [];
     
     try {
-      const parsed = JSON.parse(text);
-      // FIX: We extract the array out of the JSON object it returns
+      // FIX #2: The JSON Extractor
+      // This looks for the first '{' and the last '}' and extracts ONLY the JSON object, ignoring the rest!
+      let cleanText = text;
+      const startIndex = cleanText.indexOf('{');
+      const endIndex = cleanText.lastIndexOf('}');
+      
+      if (startIndex !== -1 && endIndex !== -1) {
+        cleanText = cleanText.substring(startIndex, endIndex + 1);
+      }
+      
+      const parsed = JSON.parse(cleanText);
       steps = parsed.steps || [];
     } catch (e) {
       console.error("Failed to parse JSON:", text);
