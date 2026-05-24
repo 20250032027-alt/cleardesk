@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Task too short" }, { status: 400 });
     }
 
-    // A cleaner prompt since we don't have to yell at it about formatting anymore!
     const prompt = `You are an expert productivity coach helping someone with ADHD. 
 Break down the following task into exactly 6 concrete, physical steps.
 Task: "${task.trim()}"
@@ -37,11 +36,18 @@ RULES:
           generationConfig: { 
             temperature: 0.4, 
             maxOutputTokens: 300,
-            // THIS is the magic bullet. It forces Gemini to output a clean Array of Strings!
             responseMimeType: "application/json",
+            // FIX: We now ask for an OBJECT containing our array. Models understand this much better!
             responseSchema: {
-              type: "ARRAY",
-              items: { type: "STRING" }
+              type: "OBJECT",
+              properties: {
+                steps: {
+                  type: "ARRAY",
+                  description: "A list of exactly 6 physical steps to start the task.",
+                  items: { type: "STRING" }
+                }
+              },
+              required: ["steps"]
             }
           }
         }),
@@ -58,12 +64,13 @@ RULES:
       );
     }
 
-    // Because we forced JSON, we don't have to do any messy text parsing/splitting!
-    const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "[]";
+    const text: string = data?.candidates?.[0]?.content?.parts?.[0]?.text ?? "{}";
     let steps: string[] = [];
     
     try {
-      steps = JSON.parse(text);
+      const parsed = JSON.parse(text);
+      // FIX: We extract the array out of the JSON object it returns
+      steps = parsed.steps || [];
     } catch (e) {
       console.error("Failed to parse JSON:", text);
       return NextResponse.json({ error: "Bad JSON response from Gemini", raw: text }, { status: 502 });
@@ -72,7 +79,7 @@ RULES:
     // Clean up just in case and remove any empty steps
     steps = steps.map(s => s.trim()).filter(s => s.length > 5);
 
-    // If Gemini gets over-excited and gives 7 or 8 steps, we strictly chop it down to 6
+    // If it gives us 7 or 8 steps, safely chop it down to 6
     if (steps.length > 6) {
       steps = steps.slice(0, 6);
     }
