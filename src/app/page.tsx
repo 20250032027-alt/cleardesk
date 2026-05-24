@@ -144,13 +144,13 @@ export default function HomePage() {
           </h2>
           <div className="articles-grid">
             {[
-              { cat: "Work", title: "ADHD-friendly jobs: what people actually switched to", excerpt: "We went through hundreds of job-related posts looking for patterns. Here are the roles people with ADHD say they actually thrive in, and the reasons why they work.", time: "8 min read" },
-              { cat: "Focus", title: "Why the 2-minute rule clicks for ADHD brains when nothing else does", excerpt: "A post explaining it got 584 upvotes for a reason. Here's the full breakdown of why this particular trick cuts through task paralysis when bigger systems fall apart.", time: "5 min read" },
-              { cat: "Office", title: "Being AuDHD in an open office: what actually helps", excerpt: "Sensory overload, constant interruption, hot-desking. This covers what people who actually deal with it say helps, without the headphones advice.", time: "10 min read" },
-              { cat: "Daily life", title: "Email paralysis with ADHD: strategies that go past the obvious", excerpt: "Not just unsubscribe from things. Real approaches from people who have had 4,000 unread messages and found ways to stop dreading their inbox.", time: "6 min read" },
-              { cat: "Meds", title: "Vyvanse vs Adderall: what people actually say after switching", excerpt: "No clinical comparisons. Just the honest patterns from people who have tried both, sorted by what they were trying to fix and how it went.", time: "12 min read" },
-              { cat: "Relationships", title: "ADHD memory and relationships: what the clinical articles miss", excerpt: "A post about memory problems nearly costing someone their marriage got 889 upvotes. The comments said more than most research papers on the topic.", time: "9 min read" },
-            ].map((a: { cat: string; title: string; excerpt: string; time: string; href: string }) => (
+              { cat: "Work", title: "ADHD-friendly jobs: what people actually switched to", excerpt: "We went through hundreds of job-related posts looking for patterns. Here are the roles people with ADHD say they actually thrive in, and the reasons why they work.", time: "8 min read", href: "/articles/adhd-friendly-jobs" },
+              { cat: "Focus", title: "Why the 2-minute rule clicks for ADHD brains when nothing else does", excerpt: "A post explaining it got 584 upvotes for a reason. Here's the full breakdown of why this particular trick cuts through task paralysis when bigger systems fall apart.", time: "5 min read", href: "/articles/two-minute-rule" },
+              { cat: "Office", title: "Being AuDHD in an open office: what actually helps", excerpt: "Sensory overload, constant interruption, hot-desking. This covers what people who actually deal with it say helps, without the headphones advice.", time: "10 min read", href: "/articles/audHD-open-office" },
+              { cat: "Daily life", title: "Email paralysis with ADHD: strategies that go past the obvious", excerpt: "Not just unsubscribe from things. Real approaches from people who have had 4,000 unread messages and found ways to stop dreading their inbox.", time: "6 min read", href: "/articles/email-paralysis" },
+              { cat: "Meds", title: "Vyvanse vs Adderall: what people actually say after switching", excerpt: "No clinical comparisons. Just the honest patterns from people who have tried both, sorted by what they were trying to fix and how it went.", time: "12 min read", href: "/articles/vyvanse-vs-adderall" },
+              { cat: "Relationships", title: "ADHD memory and relationships: what the clinical articles miss", excerpt: "A post about memory problems nearly costing someone their marriage got 889 upvotes. The comments said more than most research papers on the topic.", time: "9 min read", href: "/articles/adhd-memory-relationships" },
+            ].map((a) => (
               <a className="article-item" href={a.href} key={a.title}>
                 <div className="article-category">{a.cat}</div>
                 <div className="article-title">{a.title}</div>
