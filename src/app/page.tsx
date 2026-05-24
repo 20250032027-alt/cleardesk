@@ -150,7 +150,7 @@ export default function HomePage() {
               { cat: "Daily life", title: "Email paralysis with ADHD: strategies that go past the obvious", excerpt: "Not just unsubscribe from things. Real approaches from people who have had 4,000 unread messages and found ways to stop dreading their inbox.", time: "6 min read" },
               { cat: "Meds", title: "Vyvanse vs Adderall: what people actually say after switching", excerpt: "No clinical comparisons. Just the honest patterns from people who have tried both, sorted by what they were trying to fix and how it went.", time: "12 min read" },
               { cat: "Relationships", title: "ADHD memory and relationships: what the clinical articles miss", excerpt: "A post about memory problems nearly costing someone their marriage got 889 upvotes. The comments said more than most research papers on the topic.", time: "9 min read" },
-            ].map((a) => (
+            ].map((a: { cat: string; title: string; excerpt: string; time: string; href: string }) => (
               <a className="article-item" href={a.href} key={a.title}>
                 <div className="article-category">{a.cat}</div>
                 <div className="article-title">{a.title}</div>
