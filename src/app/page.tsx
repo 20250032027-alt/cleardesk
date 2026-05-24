@@ -151,7 +151,7 @@ export default function HomePage() {
               { cat: "Meds", title: "Vyvanse vs Adderall: what people actually say after switching", excerpt: "No clinical comparisons. Just the honest patterns from people who have tried both, sorted by what they were trying to fix and how it went.", time: "12 min read" },
               { cat: "Relationships", title: "ADHD memory and relationships: what the clinical articles miss", excerpt: "A post about memory problems nearly costing someone their marriage got 889 upvotes. The comments said more than most research papers on the topic.", time: "9 min read" },
             ].map((a) => (
-              <a className="article-item" href="#" key={a.title}>
+              <a className="article-item" href={a.href} key={a.title}>
                 <div className="article-category">{a.cat}</div>
                 <div className="article-title">{a.title}</div>
                 <p className="article-excerpt">{a.excerpt}</p>
