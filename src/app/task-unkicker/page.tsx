@@ -1,9 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 
-const GEMINI_API_KEY = "AIzaSyD648DbvTQ827fd7sSXmZ_BrF2k_MlqrbY";
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
 const EXAMPLES = [
   "Reply to that email",
   "Start the laundry",
@@ -15,7 +12,6 @@ const EXAMPLES = [
   "Start exercising",
 ];
 
-// Fallback if API fails
 const FALLBACK_STEPS = [
   "Open whatever you need to start this task",
   "Do the single smallest visible first action",
@@ -25,43 +21,6 @@ const FALLBACK_STEPS = [
   "Keep going one small step at a time",
 ];
 
-async function getStepsFromGemini(task: string): Promise<string[]> {
-  const prompt = `You are helping someone with ADHD who is stuck on a task. They cannot start it due to executive dysfunction and task paralysis.
-
-Their stuck task: "${task}"
-
-Break this into 5-7 extremely small, concrete, physical steps. Each step should take under 2 minutes. The first step must be so small their brain cannot argue with it.
-
-Rules:
-- Be brutally specific and physical (e.g. "open your laptop" not "start working")
-- No motivational language, no "you've got this"
-- No step should require decision-making
-- Write in second person, present tense
-- Each step on its own line, no numbering, no bullets, no extra text
-- Just the steps, nothing else`;
-
-  const res = await fetch(GEMINI_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{ parts: [{ text: prompt }] }],
-      generationConfig: { temperature: 0.4, maxOutputTokens: 400 },
-    }),
-  });
-
-  if (!res.ok) throw new Error("API error");
-
-  const data = await res.json();
-  const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-  const steps = text
-    .split("\n")
-    .map((s: string) => s.trim())
-    .filter((s: string) => s.length > 3 && !s.match(/^[\d\-\*\•]/));
-  
-  if (steps.length < 2) throw new Error("Bad response");
-  return steps;
-}
-
 export default function TaskUnkickerPage() {
   const [task, setTask] = useState("");
   const [steps, setSteps] = useState<string[]>([]);
@@ -69,6 +28,7 @@ export default function TaskUnkickerPage() {
   const [shown, setShown] = useState(false);
   const [loading, setLoading] = useState(false);
   const [usingAI, setUsingAI] = useState(true);
+  const [error, setError] = useState("");
   const stepsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -79,15 +39,30 @@ export default function TaskUnkickerPage() {
     if (task.trim().length < 3) return;
     setLoading(true);
     setShown(false);
-    setSteps([]);
+    setError("");
 
     let result: string[] = [];
-    let aiWorked = true;
+    let aiWorked = false;
 
     try {
-      result = await getStepsFromGemini(task);
+      const res = await fetch("/api/unkick", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ task }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.steps && data.steps.length > 1) {
+          result = data.steps;
+          aiWorked = true;
+        } else {
+          result = FALLBACK_STEPS;
+        }
+      } else {
+        result = FALLBACK_STEPS;
+      }
     } catch {
-      aiWorked = false;
       result = FALLBACK_STEPS;
     }
 
@@ -99,9 +74,7 @@ export default function TaskUnkickerPage() {
     setTimeout(() => stepsRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }), 150);
   };
 
-  const toggleDone = (i: number) => {
-    setDone((d) => d.map((v, idx) => (idx === i ? !v : v)));
-  };
+  const toggleDone = (i: number) => setDone((d) => d.map((v, idx) => (idx === i ? !v : v)));
 
   const handleClear = () => {
     setTask("");
@@ -109,6 +82,7 @@ export default function TaskUnkickerPage() {
     setDone([]);
     setShown(false);
     setLoading(false);
+    setError("");
   };
 
   const completedCount = done.filter(Boolean).length;
@@ -140,11 +114,9 @@ export default function TaskUnkickerPage() {
         </div>
 
         <div className="input-card">
-          <label className="input-label" htmlFor="taskInput">
-            What is the stuck task?
-          </label>
+          <label className="input-label" htmlFor="taskInput">What is the stuck task?</label>
           <span className="input-sublabel">
-            Be as specific or vague as you want. The more detail, the better the breakdown.
+            The more specific you are, the better the steps will be.
           </span>
           <textarea
             className="task-input"
@@ -180,14 +152,20 @@ export default function TaskUnkickerPage() {
           </div>
         </div>
 
+        {error && (
+          <div style={{ background: "var(--rose-light)", border: "0.5px solid #F0C4C4", borderRadius: 14, padding: "0.85rem 1rem", marginBottom: "1rem", fontSize: "0.85rem", color: "var(--rose)" }}>
+            {error}
+          </div>
+        )}
+
         <div ref={stepsRef} className={`steps-card${shown ? " show" : ""}`} aria-live="polite">
           <div className="steps-card-header">
             <div>
               <p className="steps-heading">
                 Breaking down: &ldquo;{task.length > 40 ? task.slice(0, 40) + "..." : task}&rdquo;
               </p>
-              <p className="steps-subheading">
-                {usingAI ? "AI-generated steps" : "General steps (offline mode)"} · tap to mark done
+              <p className="steps-subheading" style={{ color: usingAI ? "var(--teal)" : "var(--ink-faint)" }}>
+                {usingAI ? "✦ AI-generated steps" : "General steps"} · tap to mark done
               </p>
             </div>
             {completedCount > 0 && (
@@ -225,7 +203,7 @@ export default function TaskUnkickerPage() {
 
           <div className="steps-footer">
             <button className="steps-reset" onClick={handleUnkick} disabled={loading}>
-              Regenerate steps
+              Regenerate
             </button>
             <button className="steps-reset" onClick={handleClear}>
               Start over
@@ -250,15 +228,15 @@ export default function TaskUnkickerPage() {
         <h3>The initiation problem specifically</h3>
         <p>
           For people with ADHD, initiation is a specific bottleneck. The executive function system
-          that fires the starting gun on tasks does not always respond well to importance or urgency
-          the way it is supposed to. That is why something objectively easy can sit undone for weeks
-          while something that barely matters gets done immediately.
+          that fires the starting gun on tasks does not always respond well to importance or urgency.
+          That is why something objectively easy can sit undone for weeks while something that barely
+          matters gets done immediately.
         </p>
         <h3>Why you need to do the first step right now</h3>
         <p>
           If you read through the steps and think you will start later, the window often closes.
-          Task breakdown works best if you go directly from reading step one to doing step one. Even
-          if step one takes ninety seconds. The goal is to get a little momentum before your brain
+          Task breakdown works best if you go directly from reading step one to doing step one.
+          Even if step one takes ninety seconds. The goal is to get momentum before your brain
           talks you out of it.
         </p>
       </article>
