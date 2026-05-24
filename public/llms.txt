@@ -1,0 +1,28 @@
+# ClearDesk
+
+> Free ADHD tools and honest guides for work, daily life, and your brain. Built from real experience, not a textbook.
+
+ClearDesk is a collection of free browser-based tools and long-form guides for people with ADHD. No account required. No paywall. Tools store data locally in the browser only.
+
+## Tools
+
+- [Body Double Timer](/body-double-timer): Focus timer with customizable intervals for ADHD brains. Pomodoro-compatible but not Pomodoro-locked. Tracks sessions with a visual dot counter.
+- [Meds Tracker](/meds-tracker): One-tap daily medication log. Tracks streaks. Shows a 28-day history grid. Fully offline, data stays in localStorage.
+- [Task Unkicker](/task-unkicker): Paste any stuck task. AI breaks it into 5-7 physical, specific steps small enough to start. Uses Gemini 1.5 Flash via a server-side API route.
+
+## Articles
+
+- [ADHD-Friendly Jobs](/articles/adhd-friendly-jobs): What people with ADHD actually switched to and why those roles work structurally.
+- [The 2-Minute Rule](/articles/two-minute-rule): Why this specific productivity rule cuts through task paralysis when bigger systems fail.
+- [AuDHD in an Open Office](/articles/audHD-open-office): Sensory overload, accommodations, and what actually helps in open-plan workplaces.
+- [Email Paralysis](/articles/email-paralysis): Strategies beyond unsubscribing, from people who have had thousands of unread messages.
+- [Vyvanse vs Adderall](/articles/vyvanse-vs-adderall): Community-reported patterns from people who have taken both medications.
+- [ADHD Memory and Relationships](/articles/adhd-memory-relationships): What the clinical articles miss about how memory issues affect partnerships.
+
+## About
+
+ClearDesk is an independent site. Not affiliated with any pharmaceutical company or medical provider. Content describes community-reported experiences and is not medical advice.
+
+## Contact
+
+Available via the [contact page](/contact).

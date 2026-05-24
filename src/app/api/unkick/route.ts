@@ -2,8 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    // Use env variable if set, otherwise fall back to hardcoded key
-    const apiKey = process.env.GEMINI_API_KEY || "AIzaSyD648DbvTQ827fd7sSXmZ_BrF2k_MlqrbY";
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: "API key not configured" }, { status: 500 });
+    }
 
     const { task } = await req.json();
     if (!task || task.trim().length < 3) {
@@ -40,7 +42,7 @@ Rules:
     const data = await res.json();
 
     if (!res.ok) {
-      return NextResponse.json({ error: data?.error?.message || "Gemini error", debug: data }, { status: 500 });
+      return NextResponse.json({ error: data?.error?.message || "Gemini error" }, { status: 500 });
     }
 
     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -50,7 +52,7 @@ Rules:
       .filter((s: string) => s.length > 5);
 
     if (steps.length < 2) {
-      return NextResponse.json({ error: "Bad response", raw: text }, { status: 500 });
+      return NextResponse.json({ error: "Bad response" }, { status: 500 });
     }
 
     return NextResponse.json({ steps });

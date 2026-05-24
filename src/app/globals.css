@@ -629,3 +629,74 @@ section { padding: 6rem 2rem; }
 @media (max-width: 768px) {
   .article-page-inner { padding: 3rem 1.25rem 5rem; }
 }
+
+/* ════════════════════════════════
+   ACCESSIBILITY + CHECKLIST ITEMS
+════════════════════════════════ */
+
+/* Skip to content link */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  transition: top 0.2s;
+}
+.skip-to-content:focus { top: 0; }
+
+/* Focus-visible ring - keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--sage);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Tactile button active states - simulates physical press */
+.btn-primary:active { transform: translateY(1px) scale(0.98); }
+.btn-ghost:active { transform: translateY(1px) scale(0.98); }
+.btn-timer-main:active { transform: scale(0.96); }
+.nav-cta:active { transform: scale(0.97); }
+.answer-btn:active { transform: scale(0.97); }
+.btn-unkick:active { transform: translateY(1px) scale(0.98); }
+.tool-card:active { transform: translateY(-2px); }
+.hero-card:active { transform: translateY(-1px); }
+
+/* Hardware-accelerated transitions */
+.btn-primary,
+.btn-ghost,
+.nav-cta,
+.tool-card,
+.hero-card,
+.article-item,
+.btn-timer-main,
+.answer-btn,
+.btn-unkick {
+  will-change: transform;
+}
+
+/* prefers-reduced-motion - WCAG 2.1 AA */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .big-num { animation: none; }
+  .spinner { animation: none; border-top-color: white; }
+}
+
+/* ════════════════════════════════
+   TERMS PAGE
+════════════════════════════════ */
+/* Reuses .policy-page styles */
+.policy-page a { color: var(--sage); text-decoration: none; }
+.policy-page a:hover { text-decoration: underline; }
