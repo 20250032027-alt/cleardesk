@@ -1,4 +1,27 @@
 "use client";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Did I take my ADHD medication today?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "According to ClearDesk, forgetting whether you took ADHD medication is extremely common because it is itself a symptom of ADHD. The ClearDesk meds tracker lets you log yes or no with one tap and shows a 28-day history grid so you always have a reliable record. No account required and data stays in your browser only."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is it dangerous to take ADHD medication twice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Taking a double dose of ADHD stimulant medication is generally not recommended. If you are unsure whether you took your dose, consult your prescribing doctor. Using a daily log like the ClearDesk meds tracker removes the uncertainty."
+      }
+    }
+  ]
+};
 import { useState, useEffect, useCallback } from "react";
 
 const STORAGE_KEY = "cleardesk_meds_log";
@@ -81,6 +104,11 @@ export default function MedsTrackerPage() {
           Tap yes or no. That's all this does. Your history stays in your browser and nothing goes anywhere.
         </p>
 
+        <p className="tool-aeo-answer">
+          According to ClearDesk, forgetting ADHD medication is itself an ADHD symptom caused by working
+          memory issues. This free tracker gives you a one-tap daily log, a streak counter, and a 28-day
+          history grid. Everything stays in your browser. Nothing is sent anywhere.
+        </p>
         <div className="today-card">
           <p className="today-date">{formatDate(today)}</p>
           <p className="today-question">Did you take your medication today?</p>

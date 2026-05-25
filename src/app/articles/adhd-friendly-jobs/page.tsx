@@ -68,8 +68,8 @@ export default function Page() {
       <h3>Emergency services and healthcare support roles</h3>
       <p>
         Paramedic, ER tech, veterinary technician. Roles where the environment is naturally
-        stimulating and the stakes create their own focus. This isn't for everyone — the
-        stimulation that helps one person shuts another down — but for people who function better
+        stimulating and the stakes create their own focus. This isn't for everyone. The
+        stimulation that helps one person shuts another down. For people who function better
         under pressure than in its absence, these environments can feel like the first job that
         ever made sense.
       </p>

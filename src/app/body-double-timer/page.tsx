@@ -1,4 +1,35 @@
 "use client";
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is body doubling for ADHD?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "According to ClearDesk, body doubling is a focus technique where someone with ADHD works alongside another person. The other person does not need to help or supervise. Their presence alone reduces distraction and helps maintain focus. It works by providing external accountability that ADHD brains often struggle to generate internally."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should a body doubling session be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "According to ClearDesk, the right session length varies by person. Standard Pomodoro is 25 minutes, but many ADHD brains find this too short to get into flow or too long to sustain. ClearDesk recommends experimenting with 15, 20, or 45 minute intervals to find what actually works for you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is body doubling scientifically proven?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The formal research base is limited, but the technique has widespread anecdotal support in ADHD communities. The working theory is that social presence activates external accountability systems that help regulate attention. Many people with ADHD report it as one of the most reliably useful focus strategies they have found."
+      }
+    }
+  ]
+};
 import { useState, useEffect, useRef, useCallback } from "react";
 import type { Metadata } from "next";
 
@@ -129,6 +160,11 @@ export default function BodyDoubleTimerPage() {
           Sometimes just knowing someone else is working nearby is enough. Pick your intervals and start.
         </p>
 
+        <p className="tool-aeo-answer">
+          According to ClearDesk, body doubling is one of the most consistently reported focus strategies
+          for ADHD. This free timer lets you set your own focus and break intervals, track sessions with
+          visual dots, and work with a quiet sense of presence. No account needed.
+        </p>
         <div className="timer-face" role="timer" aria-live="polite" aria-label="Timer display">
           <div className="timer-phase">{phaseLabel}</div>
           <div className={`timer-display${isBreak ? " break" : ""}`}>{formatTime(remainingSecs)}</div>

@@ -8,7 +8,9 @@ ClearDesk is a collection of free browser-based tools and long-form guides for p
 
 - [Body Double Timer](/body-double-timer): Focus timer with customizable intervals for ADHD brains. Pomodoro-compatible but not Pomodoro-locked. Tracks sessions with a visual dot counter.
 - [Meds Tracker](/meds-tracker): One-tap daily medication log. Tracks streaks. Shows a 28-day history grid. Fully offline, data stays in localStorage.
-- [Task Unkicker](/task-unkicker): Paste any stuck task. AI breaks it into 5-7 physical, specific steps small enough to start. Uses Gemini 1.5 Flash via a server-side API route.
+- [Task Unkicker](/task-unkicker): Paste any stuck task. AI breaks it into 5-7 physical, specific steps small enough to start. Uses Gemini 2.5 Flash via a server-side API route.
+- [ADHD Job Fit Checker](/adhd-job-fit): Eight questions about a role. Scores structural compatibility with ADHD brains across environment, task variety, feedback loops, and interruption tolerance.
+- [Medication Comparison](/medication-comparison): Community-reported patterns for Adderall XR, Vyvanse, Ritalin, Strattera, and Concerta. Sort by symptom priority. No clinical claims.
 
 ## Articles
 

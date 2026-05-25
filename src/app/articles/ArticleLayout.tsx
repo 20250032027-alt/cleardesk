@@ -13,8 +13,22 @@ interface ArticleLayoutProps {
 }
 
 export default function ArticleLayout({ meta, children }: ArticleLayoutProps) {
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": meta.title,
+    "description": meta.description,
+    "url": `https://cleardesk.co/articles/${meta.slug}`,
+    "publisher": {
+      "@type": "Organization",
+      "name": "ClearDesk",
+      "url": "https://cleardesk.co"
+    }
+  };
+
   return (
     <main className="article-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <div className="article-page-inner">
         <div className="article-page-header">
           <Link href="/#articles" className="article-back">

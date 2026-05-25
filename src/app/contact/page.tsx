@@ -1,11 +1,10 @@
 "use client";
 import { useState } from "react";
-import type { Metadata } from "next";
 
 const REASONS = [
-  { key: "bug", title: "Bug report", desc: "Something isn't working right" },
+  { key: "bug", title: "Bug report", desc: "Something is not working right" },
   { key: "idea", title: "Tool idea", desc: "I have a suggestion" },
-  { key: "content", title: "Article feedback", desc: "Something's wrong or missing" },
+  { key: "content", title: "Article feedback", desc: "Something is wrong or missing" },
   { key: "other", title: "Something else", desc: "Just want to say hi" },
 ];
 
@@ -14,11 +13,28 @@ export default function ContactPage() {
   const [email, setEmail] = useState("");
   const [msg, setMsg] = useState("");
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = () => {
-    if (!email.trim() || !msg.trim()) { alert("Please fill in both fields."); return; }
-    // In production: connect to Formspree or Netlify Forms
-    setSent(true);
+  const handleSubmit = async () => {
+    if (!email.trim() || !msg.trim()) { setError("Please fill in both fields."); return; }
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch("https://formspree.io/f/xojrrrzb", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({ email, message: msg, reason }),
+      });
+      if (res.ok) {
+        setSent(true);
+      } else {
+        setError("Something went wrong. Try emailing us directly.");
+      }
+    } catch {
+      setError("Could not send. Check your connection and try again.");
+    }
+    setSending(false);
   };
 
   return (
@@ -66,17 +82,29 @@ export default function ContactPage() {
                 id="contactMsg"
                 value={msg}
                 onChange={(e) => setMsg(e.target.value)}
-                placeholder="Tell us what's on your mind..."
+                placeholder="Tell us what is on your mind..."
               />
             </div>
-            <button className="btn-submit" onClick={handleSubmit}>Send message</button>
+            {error && (
+              <p style={{ fontSize: "0.82rem", color: "var(--rose)", marginBottom: "0.75rem" }}>
+                {error}
+              </p>
+            )}
+            <button
+              className="btn-submit"
+              onClick={handleSubmit}
+              disabled={sending}
+              style={{ opacity: sending ? 0.6 : 1 }}
+            >
+              {sending ? "Sending..." : "Send message"}
+            </button>
           </>
         ) : (
           <div className="success-msg show">
             <div className="success-icon" aria-hidden="true">✓</div>
             <div className="success-title">Got it, thank you</div>
             <p className="success-text">
-              We'll get back to you if a reply makes sense. Either way, it's been read.
+              We will get back to you if a reply makes sense. Either way, it has been read.
             </p>
           </div>
         )}

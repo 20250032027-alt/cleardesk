@@ -21,7 +21,7 @@ export default function Page() {
       <p>
         The post that started this was blunt: these memory issues are going to cost me my
         marriage. It got 889 upvotes. The comments ran for hundreds of replies. What came through
-        wasn't just the original person's problem — it was a recognition. A lot of people have
+        wasn't just the original person's problem. It was a recognition. A lot of people have
         been in that exact spot or are in it now.
       </p>
       <p>
@@ -69,7 +69,7 @@ export default function Page() {
 
       <h2>Systems that people reported actually working</h2>
       <p>
-        Shared calendars with everything in them. Not just appointments — dates that matter to the
+        Shared calendars with everything in them. Not just appointments. Dates that matter to the
         other person, things they mentioned caring about, anything that should be remembered.
         Treating the calendar as external memory rather than just a scheduling tool.
       </p>

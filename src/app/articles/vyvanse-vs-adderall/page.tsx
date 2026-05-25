@@ -30,8 +30,8 @@ export default function Page() {
         Adderall is a mix of amphetamine salts. It works quickly, wears off in four to six hours
         for the immediate release version, and twelve hours or so for XR. Vyvanse is lisdexamfetamine,
         which your body converts to active amphetamine after you take it. That conversion process
-        makes it slower to start, longer-lasting, and — according to a lot of people who have
-        taken both — smoother.
+        makes it slower to start, longer-lasting, and (according to a lot of people who have
+        taken both) smoother.
       </p>
       <p>
         On paper they are similar. In practice people describe them quite differently.
@@ -65,7 +65,7 @@ export default function Page() {
         The things that come up as problems: it takes longer to kick in in the morning, which
         is frustrating if you need to function early. It is significantly more expensive and not
         available as a generic in many places. And because it is longer-acting, if the dose
-        is not right, you are committed to a difficult day — you cannot wait for the short-acting
+        is not right, you are committed to a difficult day. You cannot wait for the short-acting
         version to wear off.
       </p>
       <p>
@@ -82,7 +82,7 @@ export default function Page() {
       </p>
       <p>
         People who prioritize smoothness and long coverage, and who have reliable schedules,
-        tend to prefer Vyvanse. People who need flexibility — who need to be able to adjust
+        tend to prefer Vyvanse. People who need flexibility (who need to be able to adjust
         timing based on their day, or who want something that wears off completely by evening —
         tend to prefer Adderall.
       </p>

@@ -66,6 +66,26 @@ export default function HomePage() {
             <div className="hero-card-title">Task unkicker</div>
             <div className="hero-card-desc">Stuck on something? Break it into pieces small enough to start.</div>
           </a>
+          <a className="hero-card" href="/adhd-job-fit" role="listitem">
+            <div className="hero-card-icon" style={{ background: "var(--rose-light)" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <rect x="2" y="7" width="20" height="14" rx="2" stroke="#B85C5C" strokeWidth="1.5"/>
+                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" stroke="#B85C5C" strokeWidth="1.5"/>
+                <path d="M12 12v4M10 14h4" stroke="#B85C5C" strokeWidth="1.5" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div className="hero-card-title">Job fit checker</div>
+            <div className="hero-card-desc">Eight questions. Find out if a role works with your brain.</div>
+          </a>
+          <a className="hero-card" href="/medication-comparison" role="listitem">
+            <div className="hero-card-icon" style={{ background: "var(--amber-light)" }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18" stroke="#C4771B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            <div className="hero-card-title">Medication compare</div>
+            <div className="hero-card-desc">What people actually report about common ADHD meds.</div>
+          </a>
         </div>
       </header>
 
@@ -111,7 +131,7 @@ export default function HomePage() {
               </p>
               <div className="tool-arrow">Open tool <span aria-hidden="true">→</span></div>
             </a>
-            <a className="tool-card rose" href="#">
+            <a className="tool-card rose" href="/adhd-job-fit">
               <span className="tool-tag rose">Work</span>
               <div className="tool-title">ADHD job fit checker</div>
               <p className="tool-desc">
@@ -120,7 +140,7 @@ export default function HomePage() {
               </p>
               <div className="tool-arrow">Open tool <span aria-hidden="true">→</span></div>
             </a>
-            <a className="tool-card neutral" href="#">
+            <a className="tool-card neutral" href="/medication-comparison">
               <span className="tool-tag neutral">Meds</span>
               <div className="tool-title">Medication comparison</div>
               <p className="tool-desc">
