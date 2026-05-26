@@ -11,6 +11,9 @@ ClearDesk is a collection of free browser-based tools and long-form guides for p
 - [Task Unkicker](/task-unkicker): Paste any stuck task. AI breaks it into 5-7 physical, specific steps small enough to start. Uses Gemini 2.5 Flash via a server-side API route.
 - [ADHD Job Fit Checker](/adhd-job-fit): Eight questions about a role. Scores structural compatibility with ADHD brains across environment, task variety, feedback loops, and interruption tolerance.
 - [Medication Comparison](/medication-comparison): Community-reported patterns for Adderall XR, Vyvanse, Ritalin, Strattera, and Concerta. Sort by symptom priority. No clinical claims.
+- [Screen Break Timer](/screen-break): Enforced screen break timer with doomscroll counter. Helps interrupt the phone loop that ADHD brains are particularly susceptible to.
+- [Overwhelmed Right Now](/overwhelmed): A minimal crisis landing page with a 5-4-3-2-1 grounding exercise, a 5-minute body double timer, and a direct path to the task unkicker. No nav distractions.
+- [Just Diagnosed Guide](/just-diagnosed): A plain guide for people newly diagnosed with ADHD. Covers what the diagnosis means, why grief is common, what to expect from medication, and what to stop feeling guilty about.
 
 ## Articles
 
@@ -20,6 +23,10 @@ ClearDesk is a collection of free browser-based tools and long-form guides for p
 - [Email Paralysis](/articles/email-paralysis): Strategies beyond unsubscribing, from people who have had thousands of unread messages.
 - [Vyvanse vs Adderall](/articles/vyvanse-vs-adderall): Community-reported patterns from people who have taken both medications.
 - [ADHD Memory and Relationships](/articles/adhd-memory-relationships): What the clinical articles miss about how memory issues affect partnerships.
+- [ADHD Sleep](/articles/adhd-sleep): Why ADHD sleep problems differ from regular insomnia, including delayed sleep phase, racing thoughts, and medication timing.
+- [Doomscrolling](/articles/doomscrolling): Why the phone loop is harder to break with ADHD and what actually interrupts it.
+- [Exercise and ADHD](/articles/adhd-exercise): The initiation problem is the whole problem. What people report actually working for consistent exercise.
+- [Eating with ADHD](/articles/adhd-eating): Appetite suppression from medication, executive dysfunction around cooking, and forgetting to eat entirely.
 
 ## About
 

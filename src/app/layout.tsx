@@ -85,6 +85,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ul className="nav-links">
               <li><Link href="/#tools">Tools</Link></li>
               <li><Link href="/#articles">Articles</Link></li>
+              <li><Link href="/just-diagnosed" style={{color:"var(--sage)",fontWeight:"500"}}>New here?</Link></li>
               <li><Link href="/about">About</Link></li>
             </ul>
             <Link className="nav-cta" href="/#tools">Try a tool</Link>
@@ -101,6 +102,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ul className="footer-links">
               <li><Link href="/#tools">Tools</Link></li>
               <li><Link href="/#articles">Articles</Link></li>
+              <li><Link href="/just-diagnosed">Just diagnosed</Link></li>
+              <li><Link href="/overwhelmed">Overwhelmed?</Link></li>
               <li><Link href="/about">About</Link></li>
               <li><Link href="/privacy">Privacy</Link></li>
               <li><Link href="/terms">Terms</Link></li>

@@ -11,7 +11,12 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-      <header className="hero">
+            {/* Crisis banner - serves user type 1 */}
+      <div className="crisis-banner">
+        <span className="crisis-banner-text">Feeling overwhelmed right now?</span>
+        <a href="/overwhelmed" className="crisis-banner-link">Get immediate help →</a>
+      </div>
+<header className="hero">
         <div className="eyebrow">
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
             <circle cx="4" cy="4" r="3.5" fill="#4A7C59" />
@@ -149,6 +154,14 @@ export default function HomePage() {
               </p>
               <div className="tool-arrow">Open tool <span aria-hidden="true">→</span></div>
             </a>
+            <a className="tool-card teal" href="/screen-break">
+              <span className="tool-tag teal">Focus</span>
+              <div className="tool-title">Screen break timer</div>
+              <p className="tool-desc">
+                Put the phone down for a set time. A doomscroll counter to track how often you catch yourself. No judgment.
+              </p>
+              <div className="tool-arrow">Open tool <span aria-hidden="true">→</span></div>
+            </a>
           </div>
         </div>
       </section>
@@ -170,7 +183,11 @@ export default function HomePage() {
               { cat: "Daily life", title: "Email paralysis with ADHD: strategies that go past the obvious", excerpt: "Not just unsubscribe from things. Real approaches from people who have had 4,000 unread messages and found ways to stop dreading their inbox.", time: "6 min read", href: "/articles/email-paralysis" },
               { cat: "Meds", title: "Vyvanse vs Adderall: what people actually say after switching", excerpt: "No clinical comparisons. Just the honest patterns from people who have tried both, sorted by what they were trying to fix and how it went.", time: "12 min read", href: "/articles/vyvanse-vs-adderall" },
               { cat: "Relationships", title: "ADHD memory and relationships: what the clinical articles miss", excerpt: "A post about memory problems nearly costing someone their marriage got 889 upvotes. The comments said more than most research papers on the topic.", time: "9 min read", href: "/articles/adhd-memory-relationships" },
-            ].map((a) => (
+              { cat: "Daily life", title: "Why sleep is so hard with ADHD and what actually helps", excerpt: "ADHD sleep problems are different from regular insomnia. Here is why, and what people with ADHD actually report helping.", time: "7 min read", href: "/articles/adhd-sleep" },
+              { cat: "Daily life", title: "Doomscrolling with ADHD: why it hits different and what helps", excerpt: "The phone loop is harder to break when your brain is wired for novelty and variable rewards.", time: "6 min read", href: "/articles/doomscrolling" },
+              { cat: "Daily life", title: "Exercise and ADHD: why starting is the whole problem", excerpt: "Exercise is one of the most effective non-medication interventions for ADHD. Getting started is a different question.", time: "7 min read", href: "/articles/adhd-exercise" },
+              { cat: "Daily life", title: "Eating with ADHD when you can not make yourself cook", excerpt: "Appetite suppression, executive dysfunction around cooking, and forgetting to eat entirely. What people actually do.", time: "6 min read", href: "/articles/adhd-eating" },
+            ].map((a: { cat: string; title: string; excerpt: string; time: string; href: string }) => (
               <a className="article-item" href={a.href} key={a.title}>
                 <div className="article-category">{a.cat}</div>
                 <div className="article-title">{a.title}</div>
