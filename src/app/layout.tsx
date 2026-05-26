@@ -77,6 +77,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Skip to content - accessibility + AdSense requirement */}
         <a href="#main-content" className="skip-to-content">Skip to content</a>
 
+        {/* Crisis banner - always visible at very top, not blocked by nav */}
+        <div className="crisis-banner" role="banner">
+          <span className="crisis-banner-text">Feeling overwhelmed right now?</span>
+          <a href="/overwhelmed" className="crisis-banner-link">Get immediate help →</a>
+        </div>
+
         <nav className="site-nav" aria-label="Main navigation">
           <div className="nav-pill">
             <Link className="nav-logo" href="/">

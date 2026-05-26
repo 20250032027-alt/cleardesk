@@ -11,12 +11,7 @@ export default function HomePage() {
   return (
     <>
       {/* ── HERO ── */}
-            {/* Crisis banner - serves user type 1 */}
-      <div className="crisis-banner">
-        <span className="crisis-banner-text">Feeling overwhelmed right now?</span>
-        <a href="/overwhelmed" className="crisis-banner-link">Get immediate help →</a>
-      </div>
-<header className="hero">
+      <header className="hero">
         <div className="eyebrow">
           <svg width="8" height="8" viewBox="0 0 8 8" fill="none" aria-hidden="true">
             <circle cx="4" cy="4" r="3.5" fill="#4A7C59" />
@@ -285,25 +280,26 @@ export default function HomePage() {
       <script
         dangerouslySetInnerHTML={{
           __html: `
-            const observer = new IntersectionObserver((entries) => {
-              entries.forEach((entry) => {
-                if (entry.isIntersecting) {
+            // Only animate if page is loaded fresh (not from cache/bfcache)
+            window.addEventListener('load', function() {
+              const cards = document.querySelectorAll('.tool-card, .article-item, .how-step, .quote-card');
+              if (!cards.length) return;
+
+              const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                  if (!entry.isIntersecting) return;
                   const el = entry.target;
-                  const children = el.querySelectorAll('.tool-card,.article-item,.how-step,.quote-card,.hero-card');
-                  if (children.length) {
-                    children.forEach((child, idx) => {
-                      child.style.opacity = '0';
-                      child.style.transform = 'translateY(18px)';
-                      child.style.transition = 'opacity 0.6s cubic-bezier(0.22,1,0.36,1) ' + (idx*80) + 'ms, transform 0.6s cubic-bezier(0.22,1,0.36,1) ' + (idx*80) + 'ms';
-                      requestAnimationFrame(() => setTimeout(() => { child.style.opacity='1'; child.style.transform='translateY(0)'; }, 10));
-                    });
-                  }
-                  el.classList.add('visible');
+                  el.classList.add('card-revealed');
                   observer.unobserve(el);
-                }
+                });
+              }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+              cards.forEach(function(card, idx) {
+                card.style.setProperty('--delay', (idx % 6 * 70) + 'ms');
+                card.classList.add('card-reveal');
+                observer.observe(card);
               });
-            }, { threshold: 0.1 });
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            });
           `,
         }}
       />
